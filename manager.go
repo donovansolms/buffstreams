@@ -71,6 +71,7 @@ func (bm *Manager) CloseListener(address string) error {
 	bm.listenerLock.Lock()
 	defer bm.listenerLock.Unlock()
 	if btl, ok := bm.listeningSockets[address]; ok == true {
+		delete(bm.listeningSockets, address)
 		btl.Close()
 		return nil
 	}
@@ -107,6 +108,7 @@ func (bm *Manager) CloseWriter(address string) error {
 	bm.dialerLock.Lock()
 	defer bm.dialerLock.Unlock()
 	if btw, ok := bm.dialedConnections[address]; ok == true {
+		delete(bm.dialedConnections, address)
 		return btw.Close()
 	}
 	// If it wasn't opened, we hit this condition - return error
